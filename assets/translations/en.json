@@ -1,0 +1,16 @@
+{
+  "l": "Language",
+  "startTitle": "Personalize Your Experience",
+  "startDesc": "Choose your preferred theme and language to get started with a comfortable, tailored experience that suits your style.",
+  "theme": "Theme",
+  "letsStart": "Let's Start",
+  "email": "Email",
+  "pass": "Password",
+  "login": "Login",
+  "forgotPass": "Forgot Password?",
+  "dontHaveAccount": "Don’t Have Account ? ",
+  "createAcc": "Create Account",
+  "name": "Name",
+  "alreadyHaveAcc": "Already Have Account ?",
+  "rePass": "Re Password"
+}
