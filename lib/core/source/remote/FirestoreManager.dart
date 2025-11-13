@@ -70,4 +70,12 @@ class FirestoreManager {
     var eventList = docList.map((document) => document.data()).toList();
     return eventList;
   }
+
+  static Future<void> deleteEvent(String eventId) async {
+    await getEventCollection().doc(eventId).delete();
+  }
+
+  static Future<void> updateEvent(Event event) async {
+    await getEventCollection().doc(event.id).update(event.toFirestore());
+  }
 }

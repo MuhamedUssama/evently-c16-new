@@ -182,6 +182,56 @@ class CreateEventProvider extends ChangeNotifier {
     }
   }
 
+  Event? eventModel;
+  void initEvent(Event? event) {
+    if (event != null) {
+      eventModel = event;
+      titleController.text = event.title!;
+      descController.text = event.desc!;
+      eventLocation = LatLng(event.latitude ?? 0, event.longitude ?? 0);
+      city = event.city;
+      country = event.country;
+      selectedDate = event.dateTime?.toDate();
+      selectedTime = TimeOfDay.fromDateTime(event.dateTime!.toDate());
+      selectedTap = eventTypes.indexOf(event.type!);
+    }
+  }
+
+  Future<void> updateEvent(BuildContext context) async {
+    if (formKey.currentState?.validate() == null) return;
+    if (eventLocation == null && selectedDate == null && selectedTime == null) {
+      return;
+    }
+
+    eventModel?.title = titleController.text;
+    eventModel?.desc = descController.text;
+    eventModel?.latitude = eventLocation?.latitude;
+    eventModel?.longitude = eventLocation?.longitude;
+    eventModel?.city = city;
+    eventModel?.country = country;
+    eventModel?.type = eventTypes[selectedTap];
+    eventModel?.userId = FirebaseAuth.instance.currentUser!.uid;
+    eventModel?.dateTime = Timestamp.fromDate(
+      DateTime(
+        selectedDate!.year,
+        selectedDate!.month,
+        selectedDate!.day,
+        selectedTime!.hour,
+        selectedTime!.minute,
+      ),
+    );
+
+    DialogUtils.showLoadingDialog(context);
+    await FirestoreManager.updateEvent(eventModel!);
+    if (context.mounted) {
+      Navigator.pop(context);
+    }
+    DialogUtils.showToast("Event Updated successfully");
+    if (context.mounted) {
+      Navigator.pop(context);
+    }
+  }
+
   @override
   void dispose() {
     super.dispose();

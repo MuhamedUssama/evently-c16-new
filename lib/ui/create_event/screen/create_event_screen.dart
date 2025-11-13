@@ -1,5 +1,6 @@
 import 'package:evently_c16/core/reusable_components/CustomButton.dart';
 import 'package:evently_c16/core/reusable_components/CustomField.dart';
+import 'package:evently_c16/model/Event.dart';
 import 'package:evently_c16/ui/create_event/provider/create_event_provider.dart';
 import 'package:evently_c16/ui/create_event/widgets/choose_event_location.dart';
 import 'package:flutter/material.dart';
@@ -8,16 +9,31 @@ import 'package:provider/provider.dart';
 
 import '../../../core/resources/ColorsManager.dart';
 
-class CreateEventScreen extends StatelessWidget {
-  const CreateEventScreen({super.key});
+class CreateEventScreen extends StatefulWidget {
+  final Event? event;
+  const CreateEventScreen({super.key, this.event});
+
+  @override
+  State<CreateEventScreen> createState() => _CreateEventScreenState();
+}
+
+class _CreateEventScreenState extends State<CreateEventScreen> {
+  @override
+  void initState() {
+    context.read<CreateEventProvider>().initEvent(widget.event);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: AppBar(title: const Text("Create Event")),
+      appBar: AppBar(
+        title: Text(widget.event == null ? "Create Event" : "Edit Event"),
+      ),
       body: DefaultTabController(
         length: 3,
+        initialIndex: context.read<CreateEventProvider>().selectedTap,
         child: Consumer<CreateEventProvider>(
           builder: (context, provider, child) {
             return Padding(
@@ -262,9 +278,13 @@ class CreateEventScreen extends StatelessWidget {
                       ChooseEventLocation(provider: provider),
                       const SizedBox(height: 16),
                       CustomButton(
-                        title: "Add Event",
+                        title: widget.event == null
+                            ? "Add Event"
+                            : "Update Event",
                         onPress: () {
-                          provider.createNewEvent(context);
+                          widget.event == null
+                              ? provider.createNewEvent(context)
+                              : provider.updateEvent(context);
                         },
                       ),
                     ],

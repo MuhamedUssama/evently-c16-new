@@ -37,6 +37,11 @@ class AppStyle {
       ),
     ),
     textTheme: const TextTheme(
+      bodyLarge: TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.w500,
+        color: ColorsManager.primaryColor,
+      ),
       bodyMedium: TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.w500,

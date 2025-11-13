@@ -2,11 +2,14 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:evently_c16/core/resources/AppStyle.dart';
 import 'package:evently_c16/core/resources/RoutesManager.dart';
 import 'package:evently_c16/core/source/local/PrefsManager.dart';
+import 'package:evently_c16/model/Event.dart';
 import 'package:evently_c16/providers/ThemeProvider.dart';
 import 'package:evently_c16/providers/UserProvider.dart';
 import 'package:evently_c16/ui/create_event/provider/create_event_provider.dart';
 import 'package:evently_c16/ui/create_event/screen/create_event_screen.dart';
 import 'package:evently_c16/ui/create_event/screen/pick_location_screen.dart';
+import 'package:evently_c16/ui/event_details_screen/event_details_screen.dart';
+import 'package:evently_c16/ui/event_details_screen/provider/event_details_provider.dart';
 import 'package:evently_c16/ui/home/screen/home_screen.dart';
 import 'package:evently_c16/ui/login/screen/login_screen.dart';
 import 'package:evently_c16/ui/register/screen/register_screen.dart';
@@ -62,14 +65,24 @@ class MyApp extends StatelessWidget {
           create: (context) => UserProvider(),
           child: const HomeScreen(),
         ),
-        RoutesManager.createEvent: (_) => ChangeNotifierProvider(
-          create: (context) => CreateEventProvider(),
-          child: const CreateEventScreen(),
-        ),
+        RoutesManager.createEvent: (context) {
+          Event? event = ModalRoute.of(context)?.settings.arguments as Event?;
+          return ChangeNotifierProvider(
+            create: (context) => CreateEventProvider(),
+            child: CreateEventScreen(event: event),
+          );
+        },
         RoutesManager.pickLocationScreen: (context) {
           CreateEventProvider provider =
               ModalRoute.of(context)?.settings.arguments as CreateEventProvider;
           return PickLocationScreen(provider: provider);
+        },
+        RoutesManager.eventDetailsScreen: (context) {
+          Event event = ModalRoute.of(context)?.settings.arguments as Event;
+          return ChangeNotifierProvider(
+            create: (context) => EventDetailsProvider(),
+            child: EventDetailsScreen(event: event),
+          );
         },
       },
     );
